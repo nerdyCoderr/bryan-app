@@ -1,4 +1,4 @@
-# import the necessary packages
+# import the necessary packages``
 from singlemotiondetector import SingleMotionDetector
 from imutils.video import VideoStream
 from flask import Response
