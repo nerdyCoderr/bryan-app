@@ -12,6 +12,7 @@ import imutils
 import time
 import cv2
 
+#test
 # initialize the output frame and a lock used to ensure thread-safe
 # exchanges of the output frames (useful when multiple browsers/tabs
 # are viewing the stream)
