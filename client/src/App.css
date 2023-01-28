@@ -1,0 +1,19 @@
+.main{
+  display: flex;
+  justify-items: center;
+  align-items: center;
+}
+
+.data{
+  margin: 0 auto 0 auto;
+}
+
+.video_stream{
+  margin: 0 auto 0 auto;
+  background-image: url("http://localhost:5000/video_feed");
+  background-size: cover;
+  height: 150px;
+  width: 200px;
+  border-color: black;
+  border-radius: 20px;
+}
