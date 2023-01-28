@@ -1,4 +1,5 @@
 # INSTALLATION FOR VENV
+sudo apt-get install -y python3-venv
 python -m venv env
 source env/bin/activate
 pip install -r requirements.txt
