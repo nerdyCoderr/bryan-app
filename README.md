@@ -1,3 +1,11 @@
+## REPLICATE THE DATA FOLDER
+
+Go to the root directory and run the `folder_tree_maker.py`
+
+```
+python folder_tree_maker.py
+```
+
 ## INSTALLATION FOR VENV (unused)
 
 1. Create a virtual environment with pip:
