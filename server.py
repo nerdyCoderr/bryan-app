@@ -9,7 +9,6 @@ import time
 from threading import Event
 
 import cv2
-import imutils
 import numpy as np
 from flask import Flask, Response, request
 from flask_cors import CORS
@@ -27,7 +26,22 @@ camera_id = [0, 2, 4]
 camera_pos = ['left', 'top', 'right']
 
 
-@app.route("/save", methods=["POST"])
+@ app.route("/del_all")
+def del_all():
+    data_folder = 'data/'
+    for root, dirs, files in os.walk(data_folder):
+        for file in files:
+            if file.endswith('.jpg') or file.endswith('.jpeg') or file.endswith('.png'):
+                file_path = os.path.join(root, file)
+                try:
+                    os.remove(file_path)
+                except Exception as e:
+                    print("Error deleting file:", file_path)
+                    print(e)
+    return ("", 204)
+
+
+@ app.route("/save", methods=["POST"])
 def save():
     data = request.get_json()
     type = data.get("type").lower()
@@ -59,7 +73,7 @@ def copy(type, variety, pos):
     os.unlink(src)
 
 
-@app.route("/reset", methods=["POST"])
+@ app.route("/reset", methods=["POST"])
 def reset():
     try:
         event.set()
@@ -96,14 +110,24 @@ def capture(camera):
 
     if ret:
         cap.release()
-        success, encodedImage = cv2.imencode(".jpg", frame.copy())
         cv2.imwrite(f"data/temp/{camera_pos[camera]}.jpg", frame)
+
+        font = cv2.FONT_HERSHEY_SIMPLEX
+        color = (0, 255, 0)
+        scale = 1
+        thickness = 2
+        text = camera_pos[camera]
+        org = (50, 50)
+        cv2.putText(frame, text, org, font,
+                    scale, color, thickness, cv2.LINE_AA)
+
+        success, encodedImage = cv2.imencode(".jpg", frame.copy())
         return encodedImage
     else:
         return None
 
 
-@app.route("/image", methods=["POST"])
+@ app.route("/image", methods=["POST"])
 def image():
     data = request.get_json()
     imageId = data.get("imageId")
@@ -153,7 +177,7 @@ def generate(mode, camera):
                bytearray(encodedImage) + b'\r\n')
 
 
-@app.route("/stream")  # /stream?camera=1&mode=static
+@ app.route("/stream")  # /stream?camera=1&mode=static
 def video():
     global mode
     camera = request.args.get('camera', default=1, type=int)
@@ -163,6 +187,7 @@ def video():
 
 
 if __name__ == '__main__':
+    del_all()
     # construct the argument parser and parse command line arguments
     ap = argparse.ArgumentParser()
     ap.add_argument("-i", "--ip", type=str, default="localhost",
