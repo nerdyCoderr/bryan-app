@@ -1,2 +1,4 @@
 client/node_modules
 env/
+react-image-slider-carousel-main/
+data/**/*.jpg
