@@ -1,49 +1,94 @@
-# INSTALLATION FOR VENV (unused)
+## INSTALLATION FOR VENV (unused)
 
-https://packaging.python.org/en/latest/guides/installing-using-pip-and-virtual-environments/#creating-a-virtual-environment
--Windows
+1. Create a virtual environment with pip:
+
+- Windows:
+
+```
 py -m pip install --user virtualenv
 py -m venv env
 .\env\Scripts\activate
+```
 
--Ubuntu/Rasp
+- Ubuntu/Rasp:
+
+```
 sudo apt-get install -y python3-venv
 python -m venv env
 source env/bin/activate
+```
 
+2. Install the required packages:
+
+```
 pip install -r requirements.txt
+```
 
-# INSTALLATION FOR REACT
+## INSTALLATION FOR REACT
 
+1. Install nginx:
+
+```
 sudo apt install nginx
-curl -sL https://deb.nodesource.com/setup_10.x | sudo -E bash -
-sudo apt install nodejs
+```
 
-cd client
+2. Install Node.js:
+
+```
+curl -sL https://deb.nodesource.com/setup_10.x | sudo -E bash - sudo apt install nodejs
+```
+
+3. Navigate to the client directory and run
+
+```
 npm install
+```
 
-# INSTALLATION FOR OPENCV
+## INSTALLATION FOR OPENCV
 
-https://pimylifeup.com/raspberry-pi-opencv/
-pip install opencv-python #for windows
+1. Follow the instructions from this link: https://pimylifeup.com/raspberry-pi-opencv/
+2. Windows:
 
-# EXPORT PYTHON PACKAGES
+```
+pip install opencv-python
+```
 
-pip freeze > requirements.txt
+## SETUP NGINX
 
-# SETUP NGINGX
+1. Install nginx:
 
+```
 sudo apt-get install nginx
+```
+
+2. Start nginx:
+
+```
 sudo systemctl start nginx
+```
+
+3. Check nginx status:
+
+```
 sudo systemctl status nginx
+```
+
+4. Enable nginx:
+
+```
 sudo systemctl enable nginx
+```
+
+5. Edit nginx configuration file:
+
+```
 sudo nano /etc/nginx/sites-available/default
+```
 
----
-
+```
 server {
-listen 80;
-server_name flask.com;
+    listen 80;
+    server_name flask.com;
 
     location / {
         proxy_pass http://localhost:5000;
@@ -53,18 +98,36 @@ server_name flask.com;
         proxy_set_header Host $host;
         proxy_cache_bypass $http_upgrade;
     }
+}
+```
 
-## }
+6. Test nginx configuration:
 
+```
 sudo nginx -t
+```
+
+7. Restart nginx:
+
+```
 sudo systemctl restart nginx
-Add an entry in your local hosts file to map the subdomain to your local IP address:
+```
+
+8. Add the following entry to your local hosts file:
+
+```
 127.0.0.1 flask.com
+```
 
-# STARTING FLASK AND REACT AFTER BOOT
+## STARTING FLASK AND REACT AFTER BOOT
 
-Create the following file /etc/systemd/system/my_project.service:
+1. Create a service file:
 
+```
+sudo nano /etc/systemd/system/my_project.service
+```
+
+```
 [Unit]
 Description=My Project
 After=network.target
@@ -77,14 +140,28 @@ Restart=always
 
 [Install]
 WantedBy=multi-user.target
-Then you can run:
+```
 
-sudo systemctl start my_project  
+2. Start the service:
+
+```
+sudo systemctl start my_project
+```
+
+3. Check service status:
+
+```
 sudo systemctl status my_project
-If bad, tweak and try:
+```
 
+4. Restart service if needed:
+
+```
 sudo systemctl restart my_project
-sudo systemctl status my_project
-If Good:
+```
 
+5. Enable the service:
+
+```
 sudo systemctl enable my_project
+```
