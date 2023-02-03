@@ -91,6 +91,15 @@ def reset():
     return ("", 204)
 
 
+@ app.route("/image", methods=["POST"])
+def image():
+    data = request.get_json()
+    imageId = data.get("imageId")
+    response = Response(response=base64.b64encode(
+        capture(imageId)).decode(), status=200, content_type='image/jpeg')
+    return response
+
+
 def capture(camera):
     try:
         event.set()
@@ -127,13 +136,13 @@ def capture(camera):
         return None
 
 
-@ app.route("/image", methods=["POST"])
-def image():
-    data = request.get_json()
-    imageId = data.get("imageId")
-    response = Response(response=base64.b64encode(
-        capture(imageId)).decode(), status=200, content_type='image/jpeg')
-    return response
+@ app.route("/stream")  # /stream?camera=1&mode=static
+def video():
+    global mode
+    camera = request.args.get('camera', default=1, type=int)
+    mode = request.args.get('mode', default='static', type=str)
+    return Response(generate(mode, camera),
+                    mimetype="multipart/x-mixed-replace; boundary=frame")
 
 
 def stream_vid(event, camera):
@@ -175,15 +184,6 @@ def generate(mode, camera):
                 continue
         yield (b'--frame\r\n' b'Content-Type: image/jpeg\r\n\r\n' +
                bytearray(encodedImage) + b'\r\n')
-
-
-@ app.route("/stream")  # /stream?camera=1&mode=static
-def video():
-    global mode
-    camera = request.args.get('camera', default=1, type=int)
-    mode = request.args.get('mode', default='static', type=str)
-    return Response(generate(mode, camera),
-                    mimetype="multipart/x-mixed-replace; boundary=frame")
 
 
 if __name__ == '__main__':

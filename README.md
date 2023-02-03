@@ -26,12 +26,6 @@ python -m venv env
 source env/bin/activate
 ```
 
-2. Install the required packages:
-
-```
-pip install -r requirements.txt
-```
-
 ## INSTALLATION FOR REACT
 
 1. Install nginx:
@@ -172,4 +166,10 @@ sudo systemctl restart my_project
 
 ```
 sudo systemctl enable my_project
+```
+
+## Install other required packages:
+
+```
+python requirements.py
 ```
